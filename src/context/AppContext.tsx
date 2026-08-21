@@ -25,6 +25,7 @@ import {
   defaultNotifications,
   defaultAnalytics
 } from '../data/mockData';
+import { supabaseDataService } from '@/services/supabaseDataService';
 
 interface AppContextType {
   branding: SupermarketBranding;
@@ -97,7 +98,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [language, setLanguage] = useState<'en' | 'ml'>('en');
   const [quickPosterProduct, setQuickPosterProduct] = useState<Product | null>(null);
 
-  // Sync / Reset to official store details
+  // Sync / Reset to official store details & load Supabase data
   useEffect(() => {
     try {
       const savedBranding = localStorage.getItem('sm_branding');
@@ -122,6 +123,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e) {
       console.error('Error loading stored state:', e);
     }
+
+    // Async sync with Supabase PostgreSQL if available
+    (async () => {
+      const remoteProds = await supabaseDataService.fetchProducts();
+      if (remoteProds && remoteProds.length > 0) {
+        setProducts(remoteProds);
+        localStorage.setItem('sm_products', JSON.stringify(remoteProds));
+      }
+
+      const remoteBranding = await supabaseDataService.fetchBranding();
+      if (remoteBranding) {
+        setBranding(remoteBranding);
+        localStorage.setItem('sm_branding', JSON.stringify(remoteBranding));
+      }
+    })();
   }, []);
 
   const updateBranding = (newBranding: Partial<SupermarketBranding>) => {
@@ -160,6 +176,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return updated;
     });
 
+    supabaseDataService.syncProduct(newProd);
+
     const newOffer: Offer = {
       id: `off-${Date.now()}`,
       title: `${newProd.name} Special Offer`,
@@ -195,7 +213,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const offerPrice = updates.offerPrice !== undefined ? updates.offerPrice : p.offerPrice;
           const savings = Math.max(0, mrp - offerPrice);
           const discountPercent = mrp > 0 ? Math.round((savings / mrp) * 100) : 0;
-          return { ...p, ...updates, savings, discountPercent };
+          const merged = { ...p, ...updates, savings, discountPercent };
+          supabaseDataService.syncProduct(merged);
+          return merged;
         }
         return p;
       });
@@ -210,6 +230,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       localStorage.setItem('sm_products', JSON.stringify(updated));
       return updated;
     });
+    supabaseDataService.deleteProduct(id);
   };
 
   const duplicateProduct = (id: string) => {
@@ -284,6 +305,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       localStorage.setItem('sm_posters', JSON.stringify(updated));
       return updated;
     });
+
+    supabaseDataService.syncPoster(newPoster);
 
     setAnalytics(prev => ({
       ...prev,
