@@ -92,27 +92,20 @@ CREATE TABLE IF NOT EXISTS public.staff_members (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    role TEXT NOT NULL DEFAULT 'staff', -- 'super_admin' | 'manager' | 'designer' | 'staff'
+    role TEXT NOT NULL DEFAULT 'staff',
     avatar TEXT,
     status TEXT DEFAULT 'active',
     last_active TEXT DEFAULT 'Just now',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- RLS (ROW LEVEL SECURITY) POLICIES FOR PUBLIC READ ACCESS
-ALTER TABLE public.branding ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.offers ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.generated_posters ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.staff_members ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Public Read Branding" ON public.branding FOR SELECT USING (true);
-CREATE POLICY "Public Read Categories" ON public.categories FOR SELECT USING (true);
-CREATE POLICY "Public Read Products" ON public.products FOR SELECT USING (true);
-CREATE POLICY "Public Read Offers" ON public.offers FOR SELECT USING (true);
-CREATE POLICY "Public Read Posters" ON public.generated_posters FOR SELECT USING (true);
-CREATE POLICY "Public Read Staff" ON public.staff_members FOR SELECT USING (true);
+-- DISABLE RLS TO ALLOW FULL SEEDING & APP WRITES WITHOUT BLOCKS
+ALTER TABLE public.branding DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.categories DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.products DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.offers DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.generated_posters DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.staff_members DISABLE ROW LEVEL SECURITY;
 
 -- SEED DEFAULT SHOWROOM BRANDING DATA
 INSERT INTO public.branding (id, name, name_ml, phone, whatsapp_number, address)
