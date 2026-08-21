@@ -13,7 +13,7 @@ export const defaultBranding: SupermarketBranding = {
   taglineMl: "വിശ്വസ്തമായ അപ്ലയൻസുകൾ, കുറഞ്ഞ തവണ വ്യവസ്ഥയും സൗജന്യ ഡെലിവറിയും",
   phone: "094462 35837",
   whatsappNumber: "09446235837",
-  email: "sales@kottaramhomeneeds.com",
+  email: "kottaramalr@gmail.com",
   address: "Bank Junction, Alanallur, Kerala 678601",
   googleMapsUrl: "https://maps.google.com/?q=Alanallur+Bank+Junction+Kerala",
   openingHours: "Mon - Sun: 9:00 AM - 8:30 PM",

@@ -26,7 +26,7 @@ export const supabaseDataService = {
         taglineMl: data.tagline_ml || 'വിശ്വസ്തമായ അപ്ലയൻസുകൾ, കുറഞ്ഞ തവണ വ്യവസ്ഥയും സൗജന്യ ഡെലിവറിയും',
         phone: data.phone || '094462 35837',
         whatsappNumber: data.whatsapp_number || '09446235837',
-        email: data.email || 'sales@kottaramhomeneeds.com',
+        email: data.email || 'kottaramalr@gmail.com',
         address: data.address || 'Bank Junction, Alanallur, Kerala 678601',
         googleMapsUrl: data.google_maps_url || 'https://maps.google.com/?q=Alanallur+Bank+Junction+Kerala',
         openingHours: data.opening_hours || 'Mon - Sun: 9:00 AM - 8:30 PM',
